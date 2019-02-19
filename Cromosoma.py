@@ -6,7 +6,7 @@ class Cromosoma():
     #esta vacia porque no sabemos como vamos a crear los cromosomas
     def __init__(self, bits):
         self.bits = bits
-        self.aptitud = 0
+        self.aptitud = None
 
     def getAptitud(self):
         return self.aptitud
@@ -27,5 +27,7 @@ class Cromosoma():
     def mutar(self, probabilidad):
         bitamutar = random.randrange(len(self.bits))
         aleatorio = random.randrange(101)
-        if aleatorio >= probabilidad:
+        if aleatorio <= probabilidad:
             self.bits[bitamutar] = abs(self.bits[bitamutar]-1)
+            self.aptitud = None
+            print(f"El bit {self.bits} ha mutado su bit {bitamutar}")

@@ -54,11 +54,11 @@ class Poblacion():
 
     def cruzar(self):
         if self.esImpar():
-            bitAcortar = (len(self.cromosomas) - 1) / 2
+            bitAcortar = (len(self.cromosomas[0].bits) - 1) / 2
         else:
-            bitAcortar = len(self.cromosomas) / 2
+            bitAcortar = len(self.cromosomas[0].bits) / 2
         mejor = self.getMejorCromosoma()
-        tam = len(self.cromosomas)
+        tam = len(self.cromosomas[0].bits)
         nuevapoblacion = []
         while(len(self.cromosomas) > 1):
             c1 = self.cromosomas.pop()
@@ -95,6 +95,10 @@ class Poblacion():
     	for j in self.cromosomas:
     		print(f"Cromosoma {i}: {j.bits}. Aptitud: {j.aptitud}")
     		i += 1
+
+    def mutar(self, probabilidad):
+        for i in self.cromosomas:
+            i.mutar(probabilidad)
 
        
 
