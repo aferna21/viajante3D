@@ -14,12 +14,11 @@ def mejorCromosoma(listacromosomas):
 			mejorcromosoma = i
 	return mejorcromosoma
 
-def solucionSuficiente(mejorescromosomas, cromosomaactual, generaciones, porcentaje):
+def solucionSuficiente(mejorescromosomas, cromosomaactual, porcentaje):
 	mejor_cromosoma = mejorCromosoma(mejorescromosomas)
 	puntos_aptitud = cromosomaactual.aptitud * porcentaje / 100
 	ha_mejorado = abs(mejor_cromosoma.aptitud - cromosomaactual.aptitud) > puntos_aptitud
-	supera_generaciones = len(mejorescromosomas) - mejorescromosomas.index(mejor_cromosoma) > generaciones
-	return ha_mejorado and supera_generaciones
+	return ha_mejorado
 
 
 #*********************FUNCION MAIN**********************
@@ -36,7 +35,7 @@ poblacion.toString()
 mejores_generacion = []
 mejores_generacion.append(poblacion.getMejorCromosoma())
 numerogeneracion = 0
-while not solucionSuficiente(mejores_generacion, poblacion.getMejorCromosoma(), 3, 5):
+while (not solucionSuficiente(mejores_generacion, poblacion.getMejorCromosoma(), 12.5) )  and  (numerogeneracion - mejores_generacion.index(mejorCromosoma(mejores_generacion))) <= 5: #diferencia de 1 bit a las 5 generaciones
 	time.sleep(2)
 	numerogeneracion += 1
 	print(f"\n\n\n\nGeneracion {numerogeneracion}. El mejor cromosoma es {mejorCromosoma(mejores_generacion).bits} con aptitud {mejorCromosoma(mejores_generacion).aptitud} de la generacion {mejores_generacion.index(mejorCromosoma(mejores_generacion)) + 1}")
