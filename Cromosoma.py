@@ -1,33 +1,56 @@
 import random
+import math
 
 class Cromosoma():
 
-    #bits= array de 0s y 1s
-    #esta vacia porque no sabemos como vamos a crear los cromosomas
-    def __init__(self, bits):
-        self.bits = bits
-        self.aptitud = None
+    #Hacer dos constructores en uno, ya que en python no puedo tener varios. 
+    def __init__(self, num_puntos, camino):
+        if camino == None:
+            lista_ordenada = list(range(num_puntos))
+            random.shuffle(lista_ordenada)
+            self.camino = lista_ordenada
+            self.aptitud = None
+        else:
+            self.camino = camino
+            self.aptitud = None
 
-    def getAptitud(self):
-        return self.aptitud
 
-    def funcionEvaluacion(self):
-        suma= 0
-        for i in range(len(self.bits)):
-            suma += self.bits[i]
-        return suma
+    def distancia(self, puntos,origen,destino):
+        x1,y1,z1=puntos[origen]
+        x2,y2,z2=puntos[destino]
+        
+        return math.sqrt( (x2-x1)**2 + (y2-y1)**2 + (z2-z1)**2 )
 
-    def evaluar(self):
-        self.aptitud = self.funcionEvaluacion()
+    #return inverso de la distancia total para que la menor sea la mejor.
+    #se multiplica por 1000 para apreciar mejor la diferencia entre aptitudes.
+    def funcionEvaluacion(self, puntos):
+        distancia_total = 0
+        numero_puntos = len(self.camino)
+        i = 0
+        while i < numero_puntos - 1:
+            ciudad_actual = self.camino[i]
+            ciudad_siguiente = self.camino[i+1]
+            distancia_total += self.distancia(puntos, ciudad_actual, ciudad_siguiente)
+            i += 1
+        return 1/distancia_total * 100000
 
-    def solucionSuficiente(self, cromosoma, porcentaje):
-        puntosAptitud = self.aptitud * porcentaje / 100
-        return abs(self.aptitud - cromosoma.aptitud) < puntosAptitud
+
+
+    def evaluar(self, puntos):
+        self.aptitud = self.funcionEvaluacion(puntos)
+
+
 
     def mutar(self, probabilidad):
-        bitamutar = random.randrange(len(self.bits))
         aleatorio = random.randrange(101)
         if aleatorio <= probabilidad:
-            self.bits[bitamutar] = abs(self.bits[bitamutar]-1)
-            self.aptitud = None
-            print(f"El bit {self.bits} ha mutado su bit {bitamutar}")
+            ciudad1 = random.choice(self.camino)
+            ciudad2 = random.choice(self.camino)
+            while ciudad2 == ciudad1:
+                ciudad2 = random.choice(self.camino)
+            indice_ciudad1 = self.camino.index(ciudad1)
+            indice_ciudad2 = self.camino.index(ciudad2)
+            self.camino[indice_ciudad2] = ciudad1
+            self.camino[indice_ciudad1] = ciudad2
+
+            #print(f"El cromosoma {self.camino} ha intercambiado posiciones de los genes {ciudad1} y {ciudad2}")
